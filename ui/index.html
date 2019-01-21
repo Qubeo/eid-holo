@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>holoclient test</title>
+  <meta charset="UTF-8"/>
+</head>
+<body>
+  <form id="form">
+    <input type="button" value="Get card number" id="getCardBtn" onClick="getCardNumber()"/>
+    <input type="text" id="cardNumberField"/>
+
+    <input type="text" id="message"/>
+    <input type="submit" value="Send" />
+  </form>
+  <div id="output"></div>
+
+  <script type="text/javascript" src="holoclient.js"></script>
+
+  <script type="text/javascript">
+    // const url =  'wss://echo.websocket.org'
+    // const url =  'ws://192.168.1.100:8888/'
+    const url =  'ws://localhost:8888/'
+    const instance =  'test-instance' //'k+XyBjRtywLfXVCRkPfHXMOFbJ9EEmiq4DdMU2AYlGo=' // How do I get the instance?
+    const zome =  'card'
+    const trait = 'main'
+    const fn =   'add_card_number'
+
+    // DO: Zkusit přepsat do await/async syntaxe 
+
+
+    function getCardNumber() {
+
+      // let my_card: mycard::MyCard;
+      // 
+      // mycard::get_card_number();
+
+      let cardNumber = "[card number]";
+
+      let cardField = document.getElementById('cardNumberField');
+      cardField.value = cardNumber;
+
+      return cardNumber;
+    }
+
+     window.holoclient.connect(url).then(({call, close}) => {
+      document.getElementById('form').addEventListener('submit', e => {
+        e.preventDefault()
+        const content = document.querySelector('#message').value;
+
+        call(instance, zome, trait, fn)({
+            card_number: content
+          }).then(response => console.log('WS RESPONSE', response))
+      })
+    })
+
+  </script>
+</body>
+</html>
